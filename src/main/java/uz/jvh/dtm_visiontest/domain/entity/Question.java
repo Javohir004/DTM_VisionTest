@@ -4,6 +4,7 @@ package uz.jvh.dtm_visiontest.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import uz.jvh.dtm_visiontest.domain.enoms.Category;
+import uz.jvh.dtm_visiontest.domain.enoms.QuestionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,9 @@ public class Question extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @Enumerated(EnumType.STRING)
+    private QuestionType questionType;
 
     @ElementCollection
     @CollectionTable(name = "question_images", joinColumns = @JoinColumn(name = "question_id"))
