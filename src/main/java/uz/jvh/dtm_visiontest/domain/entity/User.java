@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class User extends BaseEntity {
+
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -36,7 +37,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Pattern(regexp = "^\\+998\\s?\\d{9}$", message = "Phone number must start with +998, followed by 9 digits, and may have an optional space.")
     private String phoneNumber;
-
 
     @Builder.Default
     private Double balance = 0.0;

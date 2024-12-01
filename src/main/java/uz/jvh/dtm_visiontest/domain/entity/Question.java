@@ -1,29 +1,37 @@
 package uz.jvh.dtm_visiontest.domain.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
+import uz.jvh.dtm_visiontest.domain.enoms.Category;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "questions")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class Question extends BaseEntity {
 
-    @Column(nullable = false)
-    private String questionText;  // Savol matni
-
-    @Column(nullable = false)
-    private String subject;  // Mavzu (Matematika, Ingliz tili, va boshqalar)
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @ElementCollection
-    private List<String> options;  // Variantlar
+    @CollectionTable(name = "question_images", joinColumns = @JoinColumn(name = "question_id"))
+    @Column(name = "image_path")
+    private List<String> imagePaths = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String correctAnswer;  // To'g'ri javob
+    @ElementCollection
+    @CollectionTable(name = "question_answers", joinColumns = @JoinColumn(name = "question_id"))
+    @Column(name = "answer_text")
+    private List<String> answers;
 
-    private String explanation;  // Javobni tushuntirish (ixtiyoriy)
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
 }
+

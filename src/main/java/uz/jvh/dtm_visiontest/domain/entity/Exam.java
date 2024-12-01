@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Exam extends BaseEntity {
 
-
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;  // Testni yaratgan administrator
@@ -41,4 +40,10 @@ public class Exam extends BaseEntity {
       joinColumns = @JoinColumn(name = "exam_id"), 
       inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<User> students;  // Testda ishtirok etgan talabalar
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private User student;
+
+
 }

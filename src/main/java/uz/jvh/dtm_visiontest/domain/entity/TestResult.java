@@ -1,8 +1,6 @@
 package uz.jvh.dtm_visiontest.domain.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
