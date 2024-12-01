@@ -1,4 +1,4 @@
-package uz.jvh.dtm_visiontest.domain.enoms;
+package uz.jvh.dtm_visiontest.domain.enums;
 
 public enum QuestionType {
     MAIN ,

@@ -3,8 +3,8 @@ package uz.jvh.dtm_visiontest.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import uz.jvh.dtm_visiontest.domain.enoms.Category;
-import uz.jvh.dtm_visiontest.domain.enoms.QuestionType;
+import uz.jvh.dtm_visiontest.domain.enums.Category;
+import uz.jvh.dtm_visiontest.domain.enums.QuestionType;
 
 import java.util.ArrayList;
 import java.util.List;

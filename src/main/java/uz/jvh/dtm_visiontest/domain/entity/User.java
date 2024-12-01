@@ -4,7 +4,7 @@ package uz.jvh.dtm_visiontest.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import uz.jvh.dtm_visiontest.domain.enoms.UserRole;
+import uz.jvh.dtm_visiontest.domain.enums.UserRole;
 
 
 import java.time.LocalDate;
