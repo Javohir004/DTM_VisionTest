@@ -19,13 +19,13 @@ public class Exam extends BaseEntity {
     private User creator;  // Testni yaratgan administrator
 
     @Column(nullable = false)
-    private String title;  // Test nomi
+    private String title;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;  // Test boshlanish vaqti
+    private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;  // Test tugash vaqti
+    private LocalDateTime endTime;
 
     @ManyToMany
     @JoinTable(

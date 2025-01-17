@@ -1,12 +1,8 @@
 package uz.jvh.dtm_visiontest.domain.entity;
-
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import uz.jvh.dtm_visiontest.domain.enums.UserRole;
-
-
 import java.time.LocalDate;
 
 @Entity
@@ -16,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class User extends BaseEntity {
+public class User extends BaseEntity{
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -43,6 +39,7 @@ public class User extends BaseEntity {
 
     private String address;
 
-    @Column(nullable = false)
-    private String passportSeries;
+
+
+
 }

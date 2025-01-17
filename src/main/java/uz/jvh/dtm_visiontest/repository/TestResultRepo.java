@@ -6,4 +6,5 @@ import uz.jvh.dtm_visiontest.domain.entity.TestResult;
 
 @Repository
 public interface TestResultRepo extends JpaRepository<TestResult, Long> {
+
 }
