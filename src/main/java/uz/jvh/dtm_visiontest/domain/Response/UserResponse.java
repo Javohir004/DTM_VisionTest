@@ -1,7 +1,5 @@
 package uz.jvh.dtm_visiontest.domain.Response;
-
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import uz.jvh.dtm_visiontest.domain.enums.UserRole;
 
 import java.time.LocalDate;

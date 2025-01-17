@@ -12,10 +12,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,106 +30,118 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final ObjectMapper objectMapper; // JSON mapper for custom error responses
-    private final JwtTokenUtil jwtTokenUtil; // Utility for handling JWT tokens
-    private final CustomUserDetailsService userDetailsService; // User details service implementation
+    private final ObjectMapper objectMapper;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailsService userDetailsService;
 
-    /**
-     * Custom AuthenticationEntryPoint to handle unauthorized access (401 error).
-     */
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, authException) -> {
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return ((request, response, authException) -> {
+            authException.printStackTrace();
             String errorPath = request.getRequestURI();
             String errorMessage = authException.getMessage();
-            int errorCode = 401;
-
-            // Create error response object
+            Integer errorCode = 401;
             AppErrorRequest appErrorDto = new AppErrorRequest(
                     errorPath, errorMessage, errorCode, LocalDateTime.now()
             );
-
-            // Set response details
-            response.setContentType("application/json");
             response.setStatus(errorCode);
-            try (ServletOutputStream outputStream = response.getOutputStream()) {
-                objectMapper.writeValue(outputStream, appErrorDto);
-                outputStream.flush();
-            }
-        };
+            ServletOutputStream outputStream = response.getOutputStream();
+            objectMapper.writeValue(outputStream,appErrorDto);
+        });
     }
-
-    /**
-     * Security filter chain configuration.
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable() // Disable CSRF protection (ensure this is safe for your use case)
-                .cors().configurationSource(corsConfigurationSource()).and() // Enable CORS with custom configuration
+                .csrf().disable()  // CSRF himoyasini o'chirish
+                .cors().and()  // CORS konfiguratsiyasini yoqish
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/", // Public endpoints
-                        "/api/auth/login/**",
-                        "/api/auth/register/**",
-                        "api/auth/sent-email/**",
-                        "api/auth/sent-password/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html"
-                ).permitAll()
-                .anyRequest().authenticated() // Protect all other endpoints
+                "/",
+                "/api/auth/login/**",
+                "/api/auth/register/**",
+                "api/auth/sent-email/**",
+                "api/auth/sent-password/**",
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html").permitAll().anyRequest()
+                .authenticated()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .httpBasic()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint()) // Use custom authentication entry point
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler())
                 .and()
                 .addFilterBefore(new JwtTokenFilter(jwtTokenUtil, userDetailsService),
-                        UsernamePasswordAuthenticationFilter.class) // Add custom JWT filter
+                        UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    /**
-     * Password encoder for encoding and validating passwords.
-     */
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder(){
+        return NoOpPasswordEncoder.getInstance();
+    }
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return ((request, response, accessDeniedException) -> {
+            accessDeniedException.printStackTrace();
+            String errorPath = request.getRequestURI();
+            String errorMessage = accessDeniedException.getMessage();
+            Integer errorCode = 403;
+            AppErrorRequest appErrorDto = new AppErrorRequest(
+                    errorPath, errorMessage, errorCode, LocalDateTime.now()
+            );
+            response.setStatus(errorCode);
+            ServletOutputStream outputStream = response.getOutputStream();
+            objectMapper.writeValue(outputStream,appErrorDto);
+        });
     }
 
-    /**
-     * Custom CORS configuration for handling cross-origin requests.
-     */
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedOriginPatterns(List.of(
+//                "http//localhost:8080",
+//                "http//localhost:3000"
+//        ));
+//        corsConfiguration.setAllowedHeaders(List.of(
+//                "Accept"
+//        ));
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**",corsConfiguration);
+//        /*source.registerCorsConfiguration("/api/v2/**",corsConfiguration2);
+//        source.registerCorsConfiguration("/api/v3/**",corsConfiguration3);*/
+//        return source;
+//    }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*"); // Allow all origins
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed methods
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept")); // Allowed headers
-        //corsConfiguration.setAllowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000"));  // Frontend domenini qo'shish
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // Ruxsat etilgan metodlar
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));  // Ruxsat etilgan sarlavhalar
+        corsConfiguration.setAllowCredentials(true);  // Cookie yoki auth ma'lumotlarini uzatishga ruxsat
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
 
-    /**
-     * AuthenticationManager bean for managing authentication logic.
-     */
+
     @Bean
     public AuthenticationManager authManager(HttpSecurity httpSecurity) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder =
-                httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder
+                = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder()); // Use BCrypt for password encoding
+                .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
 
-    /**
-     * DTO for custom error responses.
-     */
     @Getter
     @AllArgsConstructor
     public static class AppErrorRequest {
