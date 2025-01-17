@@ -1,4 +1,4 @@
-package uz.jvh.dtm_visiontest.config;
+package uz.jvh.dtm_visiontest.securtiy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletOutputStream;
@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,6 +28,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -55,15 +57,10 @@ public class SecurityConfig {
                 .csrf().disable()  // CSRF himoyasini o'chirish
                 .cors().and()  // CORS konfiguratsiyasini yoqish
                 .authorizeHttpRequests()
-                .requestMatchers(
-                "/",
-                "/api/auth/login/**",
-                "/api/auth/register/**",
-                "api/auth/sent-email/**",
-                "api/auth/sent-password/**",
-                "/v3/api-docs/**",
-                "/swagger-ui/**",
-                "/swagger-ui.html").permitAll().anyRequest()
+                .requestMatchers("/test",
+                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                .permitAll()
+                .anyRequest()
                 .authenticated()
                 .and()
                 .sessionManagement()

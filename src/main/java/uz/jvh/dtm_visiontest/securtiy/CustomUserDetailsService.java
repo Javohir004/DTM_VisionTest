@@ -1,4 +1,4 @@
-package uz.jvh.dtm_visiontest.config;
+package uz.jvh.dtm_visiontest.securtiy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import uz.jvh.dtm_visiontest.domain.entity.User;
 import uz.jvh.dtm_visiontest.domain.enums.UserRole;
 import uz.jvh.dtm_visiontest.repository.UserRepo;
-
 
 import java.util.Collection;
 import java.util.List;

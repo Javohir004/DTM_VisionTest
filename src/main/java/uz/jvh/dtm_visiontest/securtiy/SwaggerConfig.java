@@ -1,4 +1,4 @@
-package uz.jvh.dtm_visiontest.config;
+package uz.jvh.dtm_visiontest.securtiy;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -5,13 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.jvh.dtm_visiontest.config.JwtTokenUtil;
+
 import uz.jvh.dtm_visiontest.domain.Response.JwtResponse;
 import uz.jvh.dtm_visiontest.domain.Response.UserResponse;
 import uz.jvh.dtm_visiontest.domain.entity.User;
 import uz.jvh.dtm_visiontest.domain.exceprion.DataNotFoundException;
 import uz.jvh.dtm_visiontest.domain.request.LoginDto;
 import uz.jvh.dtm_visiontest.domain.request.UserRequest;
+import uz.jvh.dtm_visiontest.securtiy.JwtTokenUtil;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package uz.jvh.dtm_visiontest.config;
+package uz.jvh.dtm_visiontest.securtiy;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,5 @@
-package uz.jvh.dtm_visiontest.config;
+package uz.jvh.dtm_visiontest.securtiy;
+
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
