@@ -18,8 +18,9 @@ import uz.jvh.dtm_visiontest.service.AuthService;
 @RestController
 public class AuthController {
 
-    @Autowired
-    private  AuthService authService;
+
+    private final AuthService authService;
+
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody UserRequest userRequest) {

@@ -1,6 +1,6 @@
 package uz.jvh.dtm_visiontest.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,13 +11,12 @@ import uz.jvh.dtm_visiontest.domain.request.UserRequest;
 import uz.jvh.dtm_visiontest.repository.UserRepo;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private  PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
 
     public User findByUsername(String username) {
@@ -47,7 +46,7 @@ public class UserService {
 
     public UserResponse mapEntityToResponse(User user) {
         return UserResponse.builder()
-                .uuid(user.getId())
+                .id(user.getId())
                 .username(user.getUsername())
                 .surname(user.getSurname())
                 .role(user.getRole())

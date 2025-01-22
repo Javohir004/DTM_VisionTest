@@ -28,7 +28,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -54,12 +53,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()  // CSRF himoyasini o'chirish
-                .cors().and()  // CORS konfiguratsiyasini yoqish
+                .csrf().disable()  // CSRF himoyasini o'chirish // CORS konfiguratsiyasini yoqish
                 .authorizeHttpRequests()
-                .requestMatchers("/test",
-                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-                .permitAll()
+                .requestMatchers(
+                        "/test",
+                        "/api/auth/login/**",
+                        "/api/auth/register/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -82,6 +84,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
+
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return ((request, response, accessDeniedException) -> {
@@ -98,23 +101,6 @@ public class SecurityConfig {
         });
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource(){
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowedOriginPatterns(List.of(
-//                "http//localhost:8080",
-//                "http//localhost:3000"
-//        ));
-//        corsConfiguration.setAllowedHeaders(List.of(
-//                "Accept"
-//        ));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**",corsConfiguration);
-//        /*source.registerCorsConfiguration("/api/v2/**",corsConfiguration2);
-//        source.registerCorsConfiguration("/api/v3/**",corsConfiguration3);*/
-//        return source;
-//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

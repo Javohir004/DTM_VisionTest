@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-    private static final String secretKey = "753778214125442A472D4B6150645367566B59703373367639792F423F452848";
+    private final static String secretKey = "753778214125442A472D4B6150645367566B59703373367639792F423F452848";
 
     public String generateToken(@NonNull String username){
         return Jwts
